@@ -1,6 +1,6 @@
 var admin = require("firebase-admin");
 
-var serviceAccount = require("../../svijet-u-oblacima-firebase-adminsdk-4dh66-0be831cebb.json");
+var serviceAccount = require("../../svijet-u-oblacima-firebase-adminsdk.json");
 
 if (!admin.apps.length) {
   admin.initializeApp({
