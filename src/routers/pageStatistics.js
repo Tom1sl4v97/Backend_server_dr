@@ -71,7 +71,10 @@ router
   .get(async (req, res) => {})
   .get("/pageStatistics/mostPopular", async (req, res) => {
     try {
-      const { limit, skip } = req.body;
+      const { limit, skip } = req.query;
+
+      console.log("limit:", limit);
+      console.log("skip:", skip);
 
       const parsedLimit = parseInt(limit);
       const parsedSkip = parseInt(skip);

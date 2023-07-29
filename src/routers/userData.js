@@ -67,10 +67,9 @@ router
   .put((req, res) => {
     const user = req.body;
 
+    
     try {
       createNewUser(user);
-
-      console.log("User: ", user);
 
       res.status(200).json({ message: "User updated" });
     } catch (error) {
