@@ -73,8 +73,9 @@ router
     try {
       const { limit, skip } = req.query;
 
-      console.log("limit:", limit);
-      console.log("skip:", skip);
+      console.log(
+        "Getting most popular posts... limit: " + limit + ", skip: " + skip
+      );
 
       const parsedLimit = parseInt(limit);
       const parsedSkip = parseInt(skip);

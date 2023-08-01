@@ -45,6 +45,9 @@ router
   .route("/users")
   .get(async (req, res) => {
     const { email } = req.headers;
+
+    console.log("Getting user data by email:", email);
+
     const userData = await getUserData(email);
 
     if (userData) {
@@ -55,6 +58,8 @@ router
   })
   .post((req, res) => {
     const user = req.body;
+
+    console.log("Creating user:", user);
 
     try {
       createNewUser(user);
@@ -67,7 +72,8 @@ router
   .put((req, res) => {
     const user = req.body;
 
-    
+    console.log("Updating user:", user);
+
     try {
       createNewUser(user);
 
