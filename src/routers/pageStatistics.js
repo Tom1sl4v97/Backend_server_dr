@@ -64,11 +64,91 @@ const getMostPopularPosts = async (limit, skip) => {
   }
 };
 
+const getPostComments = async (postID) => {
+  // i need the list of object of postComments from the database where postId is equal to postID
+
+  try {
+    const postCommentsRef = db.collection("postComments");
+
+    const snapshot = await postCommentsRef
+      .where("postId", "==", postID)
+      .get();
+
+    const postComments = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      postComments.push(data);
+    });
+
+    return postComments;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+const getTotalViews = async () => {
+  try {
+    const pageStatisticsRef = db.collection("pageStatistics");
+
+    const snapshot = await pageStatisticsRef.get();
+
+    let totalViews = 0;
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      totalViews += data.views;
+    });
+
+    return totalViews;
+  } catch (error) {
+    throw error;
+  }
+}
+
+const getPostsStatisticsByContentIdsList = async (postIDList, totalViews) => {
+  try {
+    const postIDs = postIDList.split(",");
+
+    const pageStatisticsRef = db.collection("pageStatistics");
+
+    const snapshot = await pageStatisticsRef.where("postID", "in", postIDs).get();
+
+    const contentStatistics = [];
+
+    for (const doc of snapshot.docs) {
+      const data = doc.data();
+      const comments = await getPostComments(data.postID);
+      contentStatistics.push({ postID: data.postID, views: data.views, totalViews: totalViews, comments: comments });
+    }
+
+    return contentStatistics;
+  } catch (error) {
+    throw error;
+  }
+}
+
 let batchData = [];
 let requestCounter = 0;
 
 router
-  .get(async (req, res) => {})
+  .post("/modStatistics",async (req, res) => {
+    try {
+      const {contentIdsList} = req.body;
+
+      const totalViews = await getTotalViews();
+
+      console.log("Getting statistics for contentIdsList: " + contentIdsList);
+
+      const contentStatistics = await getPostsStatisticsByContentIdsList(contentIdsList, totalViews);
+
+      res.status(200).json({contentStatistics});
+    } catch (error) {
+      console.error("Greška pri dohvatanju najpopularnijih postova:", error);
+      return res.status(500).json({
+        error: "Došlo je do greške pri dohvatanju najpopularnijih postova.",
+      });
+    }
+  })
   .get("/pageStatistics/mostPopular", async (req, res) => {
     try {
       const { limit, skip } = req.query;

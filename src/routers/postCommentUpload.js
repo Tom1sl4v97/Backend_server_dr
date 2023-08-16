@@ -6,7 +6,6 @@ const db = admin.firestore();
 
 const uploadPostComment = async (postComment) => {
   try {
-    /* just add new post comment */
     const postCommentsRef = db.collection("postComments");
     await postCommentsRef.add(postComment);
   } catch (error) {
@@ -14,7 +13,63 @@ const uploadPostComment = async (postComment) => {
   }
 };
 
+const getUserCategoryList = async (userEmail) => {
+  try {
+    const postCommentsRef = db.collection("postComments");
+    const snapshot = await postCommentsRef
+      .select("postCategory")
+      .where("email", "==", userEmail)
+      .get();
+
+    const userCategoryList = [];
+    snapshot.forEach((doc) => {
+      const data = doc.data();
+      userCategoryList.push(data.postCategory);
+    });
+
+    const categoryList = [];
+    userCategoryList.forEach((category) => {
+      category.forEach((categoryItem) => {
+        categoryList.push(categoryItem);
+      });
+    });
+
+    const categoryListCount = {};
+    categoryList.forEach((category) => {
+      if (categoryListCount[category]) {
+        categoryListCount[category]++;
+      } else {
+        categoryListCount[category] = 1;
+      }
+    });
+
+    const sortedCategoryList = Object.keys(categoryListCount).sort(
+      (a, b) => categoryListCount[b] - categoryListCount[a]
+    );
+
+    return sortedCategoryList;
+  } catch (error) {
+    throw ("Error getting user category list:", error);
+  }
+};
+
 router
+  .get("/userRecommendation", async (req, res) => {
+    try {
+      const userEmail = req.query.userEmail;
+
+      console.log("Getting user recommendation... userEmail:", userEmail);
+
+      const userCategoryList = await getUserCategoryList(userEmail);
+
+      res.status(200).json({ userCategoryList: userCategoryList });
+    } catch (error) {
+      console.error("Greška pri dohvatanju rekomendacije korisnika:", error);
+      return res.status(500).json({
+        error: error.message,
+      });
+    }
+  })
   .post("/pageCommentsUpload", async (req, res) => {
     try {
       const postComment = req.body;
