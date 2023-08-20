@@ -9,6 +9,7 @@ const postComments = require("./routers/postComments");
 const postCommentUpload = require("./routers/postCommentUpload");
 const pageSettings = require("./routers/pageSettings");
 const pageSettingsUpdate = require("./routers/pageSettingsUpdate");
+const userOrder = require("./routers/userOrder");
 
 const corsOptions = {
   origin: "http://localhost:3000",
@@ -45,6 +46,7 @@ app.use(checkAuth);
 app.use("/api", userData);
 app.use("/api", postCommentUpload);
 app.use("/api", pageSettingsUpdate);
+app.use("/api", userOrder);
 
 app.listen(5050, () => {
   console.log("Server is running on port 5050");
