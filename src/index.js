@@ -12,7 +12,10 @@ const pageSettingsUpdate = require("./routers/pageSettingsUpdate");
 const userOrder = require("./routers/userOrder");
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: [
+    "http://localhost:3000",
+    "https://64ece6d8224b06437a1c0e0e--serene-malasada-cf29d8.netlify.app",
+  ],
 };
 
 app.use(cors(corsOptions));
