@@ -12,16 +12,8 @@ const pageSettingsUpdate = require("./routers/pageSettingsUpdate");
 const userOrder = require("./routers/userOrder");
 
 const corsOptions = {
-  origin: [
-    "http://localhost:3000",
-    "https://64ece6d8224b06437a1c0e0e--serene-malasada-cf29d8.netlify.app",
-  ],
+  origin: "http://localhost:3000",
 };
-
-app.use(cors(corsOptions));
-
-app.use(express.json());
-// app.use("/api", userData);
 
 function checkAuth(req, res, next) {
   const { authorization } = req.headers;
@@ -37,14 +29,16 @@ function checkAuth(req, res, next) {
         res.status(403).send("Unauthorized");
       });
   } else {
-    res.status(403).send("Unauthorized");
+    res.status(404).send("Token not valid or not provided");
   }
 }
+
+app.use(cors(corsOptions));
+app.use(express.json());
 
 app.use("/api", pageStatistics);
 app.use("/api", postComments);
 app.use("/api", pageSettings);
-
 app.use(checkAuth);
 app.use("/api", userData);
 app.use("/api", postCommentUpload);

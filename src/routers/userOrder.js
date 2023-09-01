@@ -92,7 +92,6 @@ router
         parsedSkip
       );
 
-      // need the total number of orders for pagination
       const ordersRef = db.collection("orders");
       const snapshot = await ordersRef
         .where("orderEmail", "==", userEmail)
@@ -128,7 +127,6 @@ router
 
       const ordersList = await getOrderList(parsedLimit, parsedSkip);
 
-      // need the total number of orders for pagination
       const ordersRef = db.collection("orders");
       const snapshot = await ordersRef.get();
       const totalOrders = snapshot.size;

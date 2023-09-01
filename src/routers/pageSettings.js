@@ -19,8 +19,7 @@ async function getPageSettings() {
 
     return null;
   } catch (error) {
-    console.error("Error getting page settings:", error);
-    return null;
+    throw new Error(error);
   }
 }
 
@@ -29,7 +28,6 @@ router.get("/pageSettings", async (req, res) => {
     console.log("Getting page settings...");
 
     const pageSettings = await getPageSettings();
-
 
     if (pageSettings !== null) {
       res.status(200).json(pageSettings);

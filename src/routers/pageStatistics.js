@@ -65,8 +65,6 @@ const getMostPopularPosts = async (limit, skip) => {
 };
 
 const getPostComments = async (postID) => {
-  // i need the list of object of postComments from the database where postId is equal to postID
-
   try {
     const postCommentsRef = db.collection("postComments");
 
